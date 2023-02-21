@@ -21,7 +21,7 @@ public class Target : MonoBehaviour
         {
             if (gameObject.CompareTag("Bad"))
             {
-                gameManager.isGameOver = true;
+                gameManager.GameOver();
             }
             else if (gameObject.CompareTag("Good"))
             {
