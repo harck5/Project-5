@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    private float lifeTime = 1f;
+    private float lifeTime = 2f;
     private GameManager gameManager;
 
-    public int points;
+    public int points;//puntuacion de los objetos
+
 
     public GameObject explosionParticle;
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        Destroy(gameObject, lifeTime);
+        Destroy(gameObject, lifeTime);//autodestruccion cada x tiempo
     }
     private void OnMouseDown()
     {
@@ -21,11 +22,22 @@ public class Target : MonoBehaviour
         {
             if (gameObject.CompareTag("Bad"))
             {
-                gameManager.GameOver();
+                if (gameManager.hasPowerupShield)
+                {
+                    gameManager.hasPowerupShield = false;
+                }
+                else
+                {
+                    gameManager.MinusLife();
+                }
             }
             else if (gameObject.CompareTag("Good"))
             {
                 gameManager.UpdateScore(points);
+            }
+            else if (gameObject.CompareTag("Shield"))
+            {
+                gameManager.hasPowerupShield = true;
             }
             Instantiate(original: explosionParticle, transform.position, explosionParticle.transform.rotation);
             Destroy(gameObject);
@@ -33,7 +45,7 @@ public class Target : MonoBehaviour
     }
     private void OnDestroy()
     {
-        gameManager.targetPositionsInScene.Remove(transform.position);
+        gameManager.targetPositionsInScene.Remove(transform.position);//dejamos libre la posicion
     }
 
 }

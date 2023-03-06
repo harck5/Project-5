@@ -12,24 +12,20 @@ public class GameManager : MonoBehaviour
     private float distanceBetweenSquares = 2.5f;
 
     public bool isGameOver;
-    public float spawnRate = 1f;
+    private float spawnRate = 1f;
     public List<Vector3> targetPositionsInScene;
     public Vector3 randomPos;
+    public bool hasPowerupShield;
 
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI livesText;
     public GameObject gameOverPanel;
+    public GameObject startGamePanel;
 
     private int score;
 
+    private int lives;
 
-
-    void Start()
-    {
-        isGameOver = false;
-        StartCoroutine("SpawnRandomTarget");
-        scoreText.text = $"Score: \n{score}";
-        gameOverPanel.SetActive(false);
-    }
     public void GameOver()
     {
         isGameOver = true;
@@ -38,10 +34,6 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-    void Update()
-    {
-        
     }
     private Vector3 RandomSpawnPosition()
     {
@@ -68,5 +60,26 @@ public class GameManager : MonoBehaviour
     {
         score += newPoints;
         scoreText.text = $"Score: \n{score}";
+    }
+    public void StartGame(int difficulty)
+    {
+        isGameOver = false;
+        score = 0;
+        UpdateScore(newPoints: 0);
+        lives = 3;
+        livesText.text = $"Lives: \n{lives}";
+        spawnRate /= difficulty;
+        StartCoroutine(SpawnRandomTarget());
+        startGamePanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+    }
+    public void MinusLife()
+    {
+        lives--;
+        livesText.text = $"Lives: \n{lives}";
+        if (lives <= 0)
+        {
+            GameOver();
+        }
     }
 }
